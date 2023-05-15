@@ -30,6 +30,24 @@ let routes = [{
             title: "课程详情",
         },
     },
+    {
+        path: "/evaluationProcess",
+        name: "evaluationProcess",
+        component: () =>
+            import ("@/views/evaluationProcess.vue"),
+        meta: {
+            title: "评价进程",
+        },
+    },
+    {
+        path: "/evaluationResult",
+        name: "evaluationResult",
+        component: () =>
+            import ("@/views/evaluationResult.vue"),
+        meta: {
+            title: "评价结果",
+        },
+    },
 ];
 const router = new VueRouter({
     scrollBehavior: () => ({ y: 0 }),

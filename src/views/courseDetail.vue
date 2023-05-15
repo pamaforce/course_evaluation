@@ -1,215 +1,1617 @@
 <template>
-  <div class="wrapper">
-    <p class="title">课程详情</p>
+  <div>
+    <div class="wrapper">
+      <p class="title">课程详情</p>
+      <img src="../assets/card.svg" class="card" />
+    </div>
+    <div class="nav">
+      <div
+        :class="'nav-item' + (activeItem === 0 ? ' active' : '')"
+        @click="changeActiveItem(0)"
+      >
+        教学结构
+      </div>
+      <div
+        :class="'nav-item' + (activeItem === 1 ? ' active' : '')"
+        @click="changeActiveItem(1)"
+      >
+        评价角色
+      </div>
+      <div :class="'capsule active' + activeItem"></div>
+    </div>
+    <div class="wrapper" v-if="activeItem === 0">
+      <div class="map" onselectstart="return false" ref="map">
+        <div id="container"></div>
+        <div :class="'btn1' + (showMenu ? '' : ' top-hide')" @click="toProcess">
+          评价进程
+        </div>
+        <div :class="'btn2' + (showMenu ? '' : ' top-hide')" @click="toResult">
+          评价结果
+        </div>
+        <div
+          :class="'eye' + (showMenu ? '' : ' left-hide')"
+          @click="toggleGrid"
+        >
+          <img :src="require('../assets/eye-fill.svg')" />
+        </div>
+        <div
+          :class="'copy' + (showMenu ? '' : ' right-1-hide')"
+          @click="copyAndPaste"
+        >
+          <img :src="require('../assets/copy.svg')" />
+        </div>
+        <div
+          :class="'bin' + (showMenu ? '' : ' right-2-hide')"
+          @click="deleteCell"
+        >
+          <img :src="require('../assets/bin.svg')" />
+        </div>
+        <div :class="'search' + (showMenu ? '' : ' top-2-hide')">
+          <el-input placeholder="分支搜索" v-model="search">
+            <i slot="prefix" class="el-input__icon el-icon-search"></i
+          ></el-input>
+        </div>
+        <div :class="'list' + (showMenu ? '' : ' top-3-hide')"></div>
+      </div>
+    </div>
+    <div class="wrapper" v-else>
+      <div class="grid">
+        <div class="grid-item grid-item-1">
+          <div class="item-top-line">
+            <div class="item-title">
+              <div class="item-icon"></div>
+              <p>学生角色信息</p>
+            </div>
+            <img
+              :src="require('../assets/convert' + isMap + '.svg')"
+              class="convert-icon"
+              @click="changeConvert"
+            />
+          </div>
+          <div v-if="isMap" class="map-view" id="graph0" ref="graph0"></div>
+          <div v-else class="grid-table">
+            <div class="action-line">
+              <div class="action">导入数据</div>
+              <div class="action">删除</div>
+              <div class="action">修改</div>
+              <div class="action">标记组长</div>
+              <div class="action">新建组群</div>
+            </div>
+            <div class="row-table">
+              <div class="row-table-item">
+                <el-table
+                  ref="multipleTable"
+                  :data="tableData.slice(0, 15)"
+                  tooltip-effect="dark"
+                >
+                  <el-table-column type="selection" width="40" align="center">
+                  </el-table-column>
+                  <el-table-column
+                    label="序号"
+                    type="index"
+                    width="50"
+                    :index="(i) => i + 1"
+                    align="center"
+                  >
+                  </el-table-column>
+                  <el-table-column label="组" width="30" align="center">
+                    <template slot-scope="scope">
+                      <div
+                        class="group-dot"
+                        :style="
+                          'background-color:' +
+                          color[parseInt(scope.$index / 4)]
+                        "
+                      ></div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    prop="name"
+                    label="姓名"
+                    width="80"
+                    align="center"
+                    show-overflow-tooltip
+                  >
+                  </el-table-column>
+                  <el-table-column
+                    prop="stu_num"
+                    label="学号"
+                    width="90"
+                    align="center"
+                    sortable
+                    show-overflow-tooltip
+                  >
+                  </el-table-column>
+                </el-table>
+              </div>
+              <div class="row-table-item">
+                <el-table
+                  ref="multipleTable"
+                  :data="tableData.slice(15, 30)"
+                  tooltip-effect="dark"
+                >
+                  <el-table-column type="selection" width="40" align="center">
+                  </el-table-column>
+                  <el-table-column
+                    label="序号"
+                    type="index"
+                    width="50"
+                    align="center"
+                    :index="(i) => i + 16"
+                  >
+                  </el-table-column>
+                  <el-table-column label="组" width="30" align="center">
+                    <template slot-scope="scope">
+                      <div
+                        class="group-dot"
+                        :style="
+                          'background-color:' +
+                          color[parseInt(scope.$index / 4)]
+                        "
+                      ></div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    prop="name"
+                    label="姓名"
+                    width="80"
+                    align="center"
+                    show-overflow-tooltip
+                  >
+                  </el-table-column>
+                  <el-table-column
+                    prop="stu_num"
+                    label="学号"
+                    width="90"
+                    align="center"
+                    sortable
+                    show-overflow-tooltip
+                  >
+                  </el-table-column>
+                </el-table>
+              </div>
+              <div class="row-table-item">
+                <el-table
+                  ref="multipleTable"
+                  :data="tableData.slice(30)"
+                  tooltip-effect="dark"
+                >
+                  <el-table-column type="selection" width="40" align="center">
+                  </el-table-column>
+                  <el-table-column
+                    label="序号"
+                    type="index"
+                    width="50"
+                    align="center"
+                    :index="(i) => i + 31"
+                  >
+                  </el-table-column>
+                  <el-table-column label="组" width="30" align="center">
+                    <template slot-scope="scope">
+                      <div
+                        class="group-dot"
+                        :style="
+                          'background-color:' +
+                          color[parseInt(scope.$index / 4)]
+                        "
+                      ></div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    prop="name"
+                    label="姓名"
+                    width="80"
+                    align="center"
+                    show-overflow-tooltip
+                  >
+                  </el-table-column>
+                  <el-table-column
+                    prop="stu_num"
+                    label="学号"
+                    width="90"
+                    align="center"
+                    sortable
+                    show-overflow-tooltip
+                  >
+                  </el-table-column>
+                </el-table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="grid-item">
+          <div class="item-top-line">
+            <div class="item-title">
+              <div class="item-icon"></div>
+              <p>教师角色信息</p>
+            </div>
+            <img
+              :src="require('../assets/convert' + isMap1 + '.svg')"
+              class="convert-icon"
+              @click="changeConvert1"
+            />
+          </div>
+          <div v-if="isMap1" class="map-view" id="graph1" ref="graph1"></div>
+          <div v-else class="grid-table">
+            <div class="action-line">
+              <div class="action">导入数据</div>
+              <div class="action">删除</div>
+              <div class="action">修改</div>
+            </div>
+            <div class="row-table">
+              <div class="row-table-item-2">
+                <el-table
+                  ref="multipleTable"
+                  :data="tableData.slice(0, 4)"
+                  tooltip-effect="dark"
+                >
+                  <el-table-column type="selection" width="40" align="center">
+                  </el-table-column>
+                  <el-table-column
+                    label="序号"
+                    type="index"
+                    width="50"
+                    :index="(i) => i + 1"
+                    align="center"
+                  >
+                  </el-table-column>
+                  <el-table-column
+                    prop="name"
+                    label="姓名"
+                    width="80"
+                    align="center"
+                    show-overflow-tooltip
+                  >
+                  </el-table-column>
+                  <el-table-column
+                    prop="stu_num"
+                    label="学号"
+                    width="90"
+                    align="center"
+                    sortable
+                    show-overflow-tooltip
+                  >
+                  </el-table-column>
+                </el-table>
+              </div>
+              <div class="row-table-item-2">
+                <el-table
+                  ref="multipleTable"
+                  :data="tableData.slice(5, 7)"
+                  tooltip-effect="dark"
+                >
+                  <el-table-column type="selection" width="40" align="center">
+                  </el-table-column>
+                  <el-table-column
+                    label="序号"
+                    type="index"
+                    width="50"
+                    align="center"
+                    :index="(i) => i + 5"
+                  >
+                  </el-table-column>
+                  <el-table-column
+                    prop="name"
+                    label="姓名"
+                    width="80"
+                    align="center"
+                    show-overflow-tooltip
+                  >
+                  </el-table-column>
+                  <el-table-column
+                    prop="stu_num"
+                    label="学号"
+                    width="90"
+                    align="center"
+                    sortable
+                    show-overflow-tooltip
+                  >
+                  </el-table-column>
+                </el-table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="grid-item">
+          <div class="item-top-line">
+            <div class="item-title">
+              <div class="item-icon"></div>
+              <p>专家角色信息</p>
+            </div>
+            <img
+              :src="require('../assets/convert' + isMap2 + '.svg')"
+              class="convert-icon"
+              @click="changeConvert2"
+            />
+          </div>
+          <div v-if="isMap2" class="map-view" id="graph2" ref="graph2"></div>
+          <div v-else class="grid-table">
+            <div class="action-line">
+              <div class="action">导入数据</div>
+              <div class="action">删除</div>
+              <div class="action">修改</div>
+            </div>
+            <div class="row-table">
+              <div class="row-table-item-2">
+                <el-table
+                  ref="multipleTable"
+                  :data="tableData.slice(0, 4)"
+                  tooltip-effect="dark"
+                >
+                  <el-table-column type="selection" width="40" align="center">
+                  </el-table-column>
+                  <el-table-column
+                    label="序号"
+                    type="index"
+                    width="50"
+                    :index="(i) => i + 1"
+                    align="center"
+                  >
+                  </el-table-column>
+                  <el-table-column
+                    prop="name"
+                    label="姓名"
+                    width="80"
+                    align="center"
+                    show-overflow-tooltip
+                  >
+                  </el-table-column>
+                  <el-table-column
+                    prop="stu_num"
+                    label="学号"
+                    width="90"
+                    align="center"
+                    sortable
+                    show-overflow-tooltip
+                  >
+                  </el-table-column>
+                </el-table>
+              </div>
+              <div class="row-table-item-2">
+                <el-table
+                  ref="multipleTable"
+                  :data="tableData.slice(5, 7)"
+                  tooltip-effect="dark"
+                >
+                  <el-table-column type="selection" width="40" align="center">
+                  </el-table-column>
+                  <el-table-column
+                    label="序号"
+                    type="index"
+                    width="50"
+                    align="center"
+                    :index="(i) => i + 5"
+                  >
+                  </el-table-column>
+                  <el-table-column
+                    prop="name"
+                    label="姓名"
+                    width="80"
+                    align="center"
+                    show-overflow-tooltip
+                  >
+                  </el-table-column>
+                  <el-table-column
+                    prop="stu_num"
+                    label="学号"
+                    width="90"
+                    align="center"
+                    sortable
+                    show-overflow-tooltip
+                  >
+                  </el-table-column>
+                </el-table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import { Graph, Path } from "@antv/x6";
+import NameCard from "../components/nodes/NameCard.vue";
+import SegmentCard from "../components/nodes/SegmentCard.vue";
+import { register } from "@antv/x6-vue-shape";
+import { Snapline } from "@antv/x6-plugin-snapline";
+import { Clipboard } from "@antv/x6-plugin-clipboard";
+import { History } from "@antv/x6-plugin-history";
+import { Keyboard } from "@antv/x6-plugin-keyboard";
+import { Selection } from "@antv/x6-plugin-selection";
+register({
+  shape: "custom-vue-node-name-card",
+  component: NameCard,
+});
+register({
+  shape: "custom-vue-node-segment-card",
+  component: SegmentCard,
+});
+Graph.registerEdge(
+  "dag-edge",
+  {
+    inherit: "edge",
+    attrs: {
+      line: {
+        stroke: "#3ab6f5",
+        strokeWidth: 2,
+        targetMarker: null,
+      },
+    },
+  },
+  true
+);
+Graph.registerConnector(
+  "algo-connector",
+  (s, e) => {
+    const offset = 4;
+    const deltaX = Math.abs(e.x - s.x);
+    const control = Math.floor((deltaX / 3) * 2);
+    const v1 = { y: s.y, x: s.x + offset + control };
+    const v2 = { y: e.y, x: e.x - offset - control };
+    return Path.normalize(
+      `M ${s.x} ${s.y}
+       L ${s.x + offset} ${s.y}
+       C ${v1.x} ${v1.y} ${v2.x} ${v2.y} ${e.x - offset} ${e.y}
+       L ${e.x} ${e.y}
+      `
+    );
+  },
+  true
+);
 export default {
   data() {
     return {
-      courseList: [
+      activeItem: 0,
+      showMenu: false,
+      showGrid: true,
+      search: "",
+      isMap: 0,
+      isMap1: 0,
+      isMap2: 0,
+      tableData: [
         {
-          num: 65,
-          name: "展示展览设计",
-          term: "212202",
-          class: "2019级宣怀1班",
+          name: "李平安",
+          stu_num: "3019204220",
         },
         {
-          num: 65,
-          name: "展示展览设计",
-          term: "212202",
-          class: "2019级宣怀1班",
+          name: "李平安",
+          stu_num: "3019204220",
         },
         {
-          num: 65,
-          name: "展示展览设计",
-          term: "212202",
-          class: "2019级宣怀1班",
+          name: "李平安",
+          stu_num: "3019204220",
         },
         {
-          num: 65,
-          name: "展示展览设计",
-          term: "212202",
-          class: "2019级宣怀1班",
+          name: "李平安",
+          stu_num: "3019204220",
         },
         {
-          num: 65,
-          name: "展示展览设计",
-          term: "212202",
-          class: "2019级宣怀1班",
+          name: "李平安",
+          stu_num: "3019204220",
+        },
+        {
+          name: "李平安",
+          stu_num: "3019204220",
+        },
+        {
+          name: "李平安",
+          stu_num: "3019204220",
+        },
+        {
+          name: "李平安",
+          stu_num: "3019204220",
+        },
+        {
+          name: "李平安",
+          stu_num: "3019204220",
+        },
+        {
+          name: "李平安",
+          stu_num: "3019204220",
+        },
+        {
+          name: "李平安",
+          stu_num: "3019204220",
+        },
+        {
+          name: "李平安",
+          stu_num: "3019204220",
+        },
+        {
+          name: "李平安",
+          stu_num: "3019204220",
+        },
+        {
+          name: "李平安",
+          stu_num: "3019204220",
+        },
+        {
+          name: "李平安",
+          stu_num: "3019204220",
+        },
+        {
+          name: "李平安",
+          stu_num: "3019204220",
+        },
+        {
+          name: "李平安",
+          stu_num: "3019204220",
+        },
+        {
+          name: "李平安",
+          stu_num: "3019204220",
+        },
+        {
+          name: "李平安",
+          stu_num: "3019204220",
+        },
+        {
+          name: "李平安",
+          stu_num: "3019204220",
+        },
+        {
+          name: "李平安",
+          stu_num: "3019204220",
+        },
+        {
+          name: "李平安",
+          stu_num: "3019204220",
+        },
+        {
+          name: "李平安",
+          stu_num: "3019204220",
+        },
+        {
+          name: "李平安",
+          stu_num: "3019204220",
+        },
+        {
+          name: "李平安",
+          stu_num: "3019204220",
+        },
+        {
+          name: "李平安",
+          stu_num: "3019204220",
+        },
+        {
+          name: "李平安",
+          stu_num: "3019204220",
+        },
+        {
+          name: "李平安",
+          stu_num: "3019204220",
+        },
+        {
+          name: "李平安",
+          stu_num: "3019204220",
+        },
+        {
+          name: "李平安",
+          stu_num: "3019204220",
+        },
+        {
+          name: "李平安",
+          stu_num: "3019204220",
+        },
+        {
+          name: "李平安",
+          stu_num: "3019204220",
+        },
+        {
+          name: "李平安",
+          stu_num: "3019204220",
         },
       ],
-      value_1: [],
-      value_2: "",
-      options_1: [],
-      options_2: [
-        {
-          label: "2019级宣怀1班",
-          value: 0,
-        },
-        {
-          label: "2018级宣怀1班",
-          value: 1,
-        },
-        {
-          label: "2019级工业设计1班",
-          value: 2,
-        },
-        {
-          label: "2019级工业设计2班",
-          value: 3,
-        },
-        {
-          label: "2018级工业设计1班",
-          value: 4,
-        },
-        {
-          label: "2018级工业设计2班",
-          value: 5,
-        },
+      graph: null,
+      graph0: null,
+      graph1: null,
+      graph2: null,
+      color: [
+        "#A2DAD4",
+        "#DED571",
+        "#71CADE",
+        "#A2ABDA",
+        "#A2DAD4",
+        "#DED571",
+        "#71CADE",
+        "#A2ABDA",
       ],
-      value_3: [0, 4],
-      marks: {
-        0: "2022",
-        1: {
-          label: this.$createElement("strong", "2023"),
-        },
-        2: "2024",
-        3: "2025",
-        4: "2026",
-        5: "2027",
-        6: "2028",
-      },
     };
   },
   methods: {
-    handleChange(val) {
-      console.log(val);
+    changeActiveItem(val) {
+      if (this.activeItem === 1 && val === 0) {
+        this.activeItem = val;
+        this.$nextTick(() => {
+          this.initGraph();
+        });
+      } else if (this.activeItem === 0 && val === 1) {
+        this.activeItem = val;
+        this.graph.dispose();
+      }
     },
-    toDelete(i) {
-      console.log(this.courseList[i]);
+    toggleGrid() {
+      if (this.showGrid) {
+        this.showGrid = false;
+        this.graph.hideGrid();
+      } else {
+        this.showGrid = true;
+        this.graph.showGrid();
+      }
     },
-    toDetail(i) {
-      console.log(this.courseList[i]);
+    toProcess() {
+      this.$router.push("/evaluationProcess");
     },
-  },
-  created() {
-    this.options_1 = [];
-    for (let i = 0; i <= 13; i++) {
-      this.options_1.push({
-        value: 2022 + i,
-        label: `${2022 + i}-${2022 + i + 1}`,
-        children: [
-          {
-            value: 0,
-            label: "学期1",
-          },
-          {
-            value: 1,
-            label: "学期2",
-          },
-        ],
+    toResult() {
+      this.$router.push("/evaluationResult");
+    },
+    changeConvert() {
+      this.isMap = 1 - this.isMap;
+      if (this.isMap == 1) {
+        this.$nextTick(() => {
+          this.initGraph0();
+        });
+      } else {
+        this.graph0.dispose();
+      }
+    },
+    changeConvert1() {
+      this.isMap1 = 1 - this.isMap1;
+      if (this.isMap1 == 1) {
+        this.$nextTick(() => {
+          this.initGraph1();
+        });
+      } else {
+        this.graph1.dispose();
+      }
+    },
+    changeConvert2() {
+      this.isMap2 = 1 - this.isMap2;
+      if (this.isMap2 == 1) {
+        this.$nextTick(() => {
+          this.initGraph2();
+        });
+      } else {
+        this.graph2.dispose();
+      }
+    },
+    copyAndPaste() {
+      let cells = this.graph.getSelectedCells();
+      cells = cells.filter((item) => !item.data.disableClone);
+      if (cells.length) {
+        this.graph.copy(cells);
+      }
+      if (!this.graph.isClipboardEmpty()) {
+        const cells = this.graph.paste({ offset: 32 });
+        this.graph.cleanSelection();
+        this.graph.select(cells);
+      }
+    },
+    deleteCell() {
+      let cells = this.graph.getSelectedCells();
+      cells.forEach((cell) => {
+        if (cell.data && cell.data.disableRemove) return;
+        cell.remove();
       });
-    }
+    },
+    setGraph(graph) {
+      graph.use(
+        new Snapline({
+          enabled: true,
+          sharp: true,
+        })
+      );
+      graph.use(
+        new Clipboard({
+          enabled: true,
+        })
+      );
+      graph.use(
+        new Keyboard({
+          enabled: true,
+          global: true,
+        })
+      );
+      graph.use(
+        new History({
+          enabled: true,
+        })
+      );
+      graph.use(
+        new Selection({
+          enabled: true,
+          multiple: true,
+          rubberband: true,
+          movable: true,
+          pointerEvents: "none",
+          showNodeSelectionBox: true,
+        })
+      );
+      graph.bindKey("backspace", () => {
+        let cells = graph.getSelectedCells();
+        cells.forEach((cell) => {
+          if (cell.data && cell.data.disableRemove) return;
+          cell.remove();
+        });
+        return false;
+      });
+      graph.bindKey("ctrl+c", () => {
+        let cells = graph.getSelectedCells();
+        cells = cells.filter((item) => !item.data || !item.data.disableClone);
+        if (cells.length) {
+          graph.copy(cells);
+        }
+        return false;
+      });
+      graph.bindKey("ctrl+v", () => {
+        if (!graph.isClipboardEmpty()) {
+          const cells = graph.paste({ offset: 32 });
+          graph.cleanSelection();
+          graph.select(cells);
+        }
+        return false;
+      });
+      graph.bindKey("ctrl+z", () => {
+        if (graph.canUndo()) graph.undo();
+        return false;
+      });
+      graph.bindKey("ctrl+y", () => {
+        if (graph.canRedo()) graph.redo();
+        return false;
+      });
+      setTimeout(() => {
+        graph.zoomToFit({ maxScale: 1.8 });
+        graph.centerContent();
+        graph.cleanHistory();
+      }, 100);
+    },
+    initGraph() {
+      const graph = new Graph({
+        container: document.getElementById("container"),
+        autoResize: true,
+        panning: {
+          enabled: true,
+          eventTypes: ["rightMouseDown"],
+        },
+        mousewheel: true,
+        scaling: { max: 4, min: 1 },
+        grid: {
+          visible: true,
+          type: "doubleMesh",
+          args: [
+            {
+              color: "#eee",
+              thickness: 1,
+            },
+            {
+              color: "#ddd",
+              thickness: 2,
+              factor: 8,
+            },
+          ],
+        },
+        connecting: {
+          snap: {
+            radius: 20,
+          },
+          allowBlank: false,
+          allowLoop: false,
+          allowNode: false,
+          allowEdge: false,
+          highlight: true,
+          connector: "algo-connector",
+          connectionPoint: "anchor",
+          anchor: "center",
+          validateMagnet({ magnet }) {
+            return magnet.getAttribute("port-group") === "out";
+          },
+          validateConnection({ targetMagnet }) {
+            return targetMagnet.getAttribute("port-group") === "in";
+          },
+          createEdge() {
+            return graph.createEdge({
+              shape: "dag-edge",
+              attrs: {
+                line: {
+                  strokeDasharray: "5 5",
+                },
+              },
+              zIndex: -1,
+            });
+          },
+        },
+        highlighting: {
+          magnetAdsorbed: {
+            name: "stroke",
+            args: {
+              attrs: {
+                fill: "#fff",
+                stroke: "#3ab6f5",
+                strokeWidth: 2,
+              },
+            },
+          },
+        },
+      });
+      graph.resize(
+        this.$refs.map.getBoundingClientRect().width,
+        this.$refs.map.getBoundingClientRect().height
+      );
+      this.graph = graph;
+      this.showGrid = true;
+      graph.on("blank:dblclick", () => {
+        graph.zoomToFit({ maxScale: 3 });
+        graph.centerContent();
+      });
+      graph.on("edge:connected", ({ edge }) => {
+        edge.attr({
+          line: {
+            strokeDasharray: "",
+          },
+        });
+      });
+      this.setGraph(graph);
+      const groups = {
+        in: {
+          attrs: {
+            circle: {
+              r: 5,
+              magnet: true,
+              stroke: "#C2C8D5",
+              strokeWidth: 1,
+              fill: "#fff",
+            },
+          },
+          position: {
+            name: "left",
+            args: {
+              dx: 15,
+              dy: 10,
+            },
+          },
+        },
+        out: {
+          attrs: {
+            circle: {
+              r: 5,
+              magnet: true,
+              stroke: "#C2C8D5",
+              strokeWidth: 1,
+              fill: "#fff",
+            },
+          },
+          position: {
+            name: "right",
+            args: {
+              dx: -15,
+              dy: 10,
+            },
+          },
+        },
+      };
+      const nameNode = graph.addNode({
+        shape: "custom-vue-node-name-card",
+        x: 0,
+        y: 0,
+        data: {
+          title: "展示展览设计",
+          score: 100,
+          disableClone: true,
+          disableRemove: true,
+        },
+        ports: {
+          groups: groups,
+          items: [{ id: "out-port-1", group: "out" }],
+        },
+      });
+      const segmentNode1 = graph.addNode({
+        shape: "custom-vue-node-segment-card",
+        x: 400,
+        y: -200,
+        data: {
+          title: "环节名称1",
+          score: 15,
+        },
+        ports: {
+          groups: groups,
+          items: [
+            { id: "in-port-1", group: "in" },
+            { id: "out-port-1", group: "out" },
+          ],
+        },
+      });
+      const segmentNode2 = graph.addNode({
+        shape: "custom-vue-node-segment-card",
+        x: 400,
+        y: 0,
+        data: {
+          title: "环节名称2",
+          score: 50,
+        },
+        ports: {
+          groups: groups,
+          items: [
+            { id: "in-port-1", group: "in" },
+            { id: "out-port-1", group: "out" },
+          ],
+        },
+      });
+      const segmentNode3 = graph.addNode({
+        shape: "custom-vue-node-segment-card",
+        x: 400,
+        y: 200,
+        data: {
+          title: "环节名称3",
+          score: 35,
+        },
+        ports: {
+          groups: groups,
+          items: [
+            { id: "in-port-1", group: "in" },
+            { id: "out-port-1", group: "out" },
+          ],
+        },
+      });
+      graph.addEdge({
+        shape: "dag-edge",
+        zIndex: -1,
+        source: { cell: nameNode, port: "out-port-1" },
+        target: { cell: segmentNode1, port: "in-port-1" },
+      });
+      graph.addEdge({
+        shape: "dag-edge",
+        zIndex: -1,
+        source: { cell: nameNode, port: "out-port-1" },
+        target: { cell: segmentNode2, port: "in-port-1" },
+      });
+      graph.addEdge({
+        shape: "dag-edge",
+        zIndex: -1,
+        source: { cell: nameNode, port: "out-port-1" },
+        target: { cell: segmentNode3, port: "in-port-1" },
+      });
+      setTimeout(() => {
+        this.showMenu = true;
+      }, 1000);
+      console.log(graph);
+    },
+    initGraph0() {
+      const graph = new Graph({
+        container: document.getElementById("graph0"),
+        autoResize: true,
+        panning: {
+          enabled: true,
+          eventTypes: ["rightMouseDown"],
+        },
+        mousewheel: true,
+        scaling: { max: 3, min: 0.8 },
+        embedding: {
+          enabled: true,
+          findParent({ node }) {
+            const bbox = node.getBBox();
+            return this.getNodes().filter((node) => {
+              const data = node.getData();
+              if (data && data.parent) {
+                const targetBBox = node.getBBox();
+                return bbox.isIntersectWithRect(targetBBox);
+              }
+              return false;
+            });
+          },
+        },
+        highlighting: {
+          embedding: {
+            name: "stroke",
+            args: {
+              padding: -1,
+              attrs: {
+                stroke: "#73d13d",
+              },
+            },
+          },
+        },
+      });
+      graph.resize(
+        this.$refs.graph0.getBoundingClientRect().width,
+        this.$refs.graph0.getBoundingClientRect().height
+      );
+      this.graph0 = graph;
+      graph.on("blank:dblclick", () => {
+        graph.zoomToFit({ maxScale: 2 });
+        graph.centerContent();
+      });
+      this.setGraph(graph);
+      graph.addNode({
+        x: 40,
+        y: 140,
+        width: 100,
+        height: 50,
+        label: "Child\n(unembed)",
+        zIndex: 10,
+        attrs: {
+          body: {
+            stroke: "none",
+            fill: "#3199FF",
+          },
+          label: {
+            fill: "#fff",
+            fontSize: 12,
+          },
+        },
+      });
+      graph.addNode({
+        x: 500,
+        y: 100,
+        width: 100,
+        height: 50,
+        label: "Child\n(unembed)",
+        zIndex: 10,
+        attrs: {
+          body: {
+            stroke: "none",
+            fill: "#47C769",
+          },
+          label: {
+            fill: "#fff",
+            fontSize: 12,
+          },
+        },
+      });
+      graph.addNode({
+        x: 200,
+        y: 80,
+        width: 240,
+        height: 160,
+        zIndex: 1,
+        label: "Parent",
+        attrs: {
+          body: {
+            fill: "#fffbe6",
+            stroke: "#ffe7ba",
+          },
+          label: {
+            fontSize: 12,
+          },
+        },
+        data: {
+          parent: true,
+        },
+      });
+      graph.on("node:change:parent", ({ node }) => {
+        node.attr({
+          label: {
+            text: "Child\n(embed)",
+          },
+        });
+      });
+    },
+    initGraph1() {
+      const graph = new Graph({
+        container: document.getElementById("graph1"),
+        autoResize: true,
+        panning: {
+          enabled: true,
+          eventTypes: ["rightMouseDown"],
+        },
+        mousewheel: true,
+        scaling: { max: 3, min: 0.8 },
+        embedding: {
+          enabled: true,
+          findParent({ node }) {
+            const bbox = node.getBBox();
+            return this.getNodes().filter((node) => {
+              const data = node.getData();
+              if (data && data.parent) {
+                const targetBBox = node.getBBox();
+                return bbox.isIntersectWithRect(targetBBox);
+              }
+              return false;
+            });
+          },
+        },
+        highlighting: {
+          embedding: {
+            name: "stroke",
+            args: {
+              padding: -1,
+              attrs: {
+                stroke: "#73d13d",
+              },
+            },
+          },
+        },
+      });
+      graph.resize(
+        this.$refs.graph1.getBoundingClientRect().width,
+        this.$refs.graph1.getBoundingClientRect().height
+      );
+      this.graph1 = graph;
+      graph.on("blank:dblclick", () => {
+        graph.zoomToFit({ maxScale: 2 });
+        graph.centerContent();
+      });
+      this.setGraph(graph);
+      graph.addNode({
+        x: 40,
+        y: 140,
+        width: 100,
+        height: 50,
+        label: "Child\n(unembed)",
+        zIndex: 10,
+        attrs: {
+          body: {
+            stroke: "none",
+            fill: "#3199FF",
+          },
+          label: {
+            fill: "#fff",
+            fontSize: 12,
+          },
+        },
+      });
+      graph.addNode({
+        x: 500,
+        y: 100,
+        width: 100,
+        height: 50,
+        label: "Child\n(unembed)",
+        zIndex: 10,
+        attrs: {
+          body: {
+            stroke: "none",
+            fill: "#47C769",
+          },
+          label: {
+            fill: "#fff",
+            fontSize: 12,
+          },
+        },
+      });
+      graph.addNode({
+        x: 200,
+        y: 80,
+        width: 240,
+        height: 160,
+        zIndex: 1,
+        label: "Parent",
+        attrs: {
+          body: {
+            fill: "#fffbe6",
+            stroke: "#ffe7ba",
+          },
+          label: {
+            fontSize: 12,
+          },
+        },
+        data: {
+          parent: true,
+        },
+      });
+      graph.on("node:change:parent", ({ node }) => {
+        node.attr({
+          label: {
+            text: "Child\n(embed)",
+          },
+        });
+      });
+    },
+    initGraph2() {
+      const graph = new Graph({
+        container: document.getElementById("graph2"),
+        autoResize: true,
+        panning: {
+          enabled: true,
+          eventTypes: ["rightMouseDown"],
+        },
+        mousewheel: true,
+        scaling: { max: 3, min: 0.8 },
+        embedding: {
+          enabled: true,
+          findParent({ node }) {
+            const bbox = node.getBBox();
+            return this.getNodes().filter((node) => {
+              const data = node.getData();
+              if (data && data.parent) {
+                const targetBBox = node.getBBox();
+                return bbox.isIntersectWithRect(targetBBox);
+              }
+              return false;
+            });
+          },
+        },
+        highlighting: {
+          embedding: {
+            name: "stroke",
+            args: {
+              padding: -1,
+              attrs: {
+                stroke: "#73d13d",
+              },
+            },
+          },
+        },
+      });
+      graph.resize(
+        this.$refs.graph2.getBoundingClientRect().width,
+        this.$refs.graph2.getBoundingClientRect().height
+      );
+      this.graph2 = graph;
+      graph.on("blank:dblclick", () => {
+        graph.zoomToFit({ maxScale: 2 });
+        graph.centerContent();
+      });
+      this.setGraph(graph);
+      graph.addNode({
+        x: 40,
+        y: 140,
+        width: 100,
+        height: 50,
+        label: "Child\n(unembed)",
+        zIndex: 10,
+        attrs: {
+          body: {
+            stroke: "none",
+            fill: "#3199FF",
+          },
+          label: {
+            fill: "#fff",
+            fontSize: 12,
+          },
+        },
+      });
+      graph.addNode({
+        x: 500,
+        y: 100,
+        width: 100,
+        height: 50,
+        label: "Child\n(unembed)",
+        zIndex: 10,
+        attrs: {
+          body: {
+            stroke: "none",
+            fill: "#47C769",
+          },
+          label: {
+            fill: "#fff",
+            fontSize: 12,
+          },
+        },
+      });
+      graph.addNode({
+        x: 200,
+        y: 80,
+        width: 240,
+        height: 160,
+        zIndex: 1,
+        label: "Parent",
+        attrs: {
+          body: {
+            fill: "#fffbe6",
+            stroke: "#ffe7ba",
+          },
+          label: {
+            fontSize: 12,
+          },
+        },
+        data: {
+          parent: true,
+        },
+      });
+      graph.on("node:change:parent", ({ node }) => {
+        node.attr({
+          label: {
+            text: "Child\n(embed)",
+          },
+        });
+      });
+    },
   },
+  mounted() {
+    this.initGraph();
+  },
+  created() {},
 };
 </script>
 
 <style scoped>
 .wrapper {
   padding: 60px 112px;
+  position: relative;
+}
+.btn1 {
+  position: absolute;
+  cursor: pointer;
+  width: 140px;
+  height: 40px;
+  cursor: pointer;
+  left: 48px;
+  top: 28px;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 0.5px solid #dddddd;
+  font-size: 16px;
+  letter-spacing: 0.05em;
+  color: #333333;
+  background-color: white;
+  transition: all 0.5s ease-in-out;
+}
+.btn2 {
+  position: absolute;
+  cursor: pointer;
+  width: 140px;
+  height: 40px;
+  cursor: pointer;
+  left: 203px;
+  top: 28px;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 0.5px solid #dddddd;
+  font-size: 16px;
+  letter-spacing: 0.05em;
+  color: #333333;
+  background-color: white;
+  transition: all 0.6s ease-in-out;
+}
+.eye {
+  position: absolute;
+  top: 442px;
+  left: 50px;
+  width: 60px;
+  height: 60px;
+  background: rgba(61, 61, 61, 0.6);
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.6s ease-in-out;
+}
+.eye img {
+  width: 30px;
+  height: 30px;
+}
+.copy {
+  position: absolute;
+  top: 380px;
+  right: 90px;
+  width: 80px;
+  height: 80px;
+  background: rgba(61, 61, 61, 0.6);
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.6s ease-in-out;
+}
+.bin {
+  position: absolute;
+  top: 470px;
+  right: 50px;
+  width: 60px;
+  height: 60px;
+  background: rgba(61, 61, 61, 0.6);
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.6s ease-in-out;
+}
+.search {
+  position: absolute;
+  top: 20px;
+  right: 50px;
+  width: 160px;
+  height: 30px;
+  background: #ffffff;
+  border: 0.5px solid #c0c0c0;
+  border-radius: 12px;
+  transition: all 0.6s ease-in-out;
+  overflow: hidden;
+}
+.list {
+  position: absolute;
+  top: 60px;
+  right: 50px;
+  width: 160px;
+  height: 220px;
+  background: rgba(245, 245, 245, 0.4);
+  border: 0.4px solid #c0c0c0;
+  border-radius: 12px;
+  transition: all 0.6s ease-in-out;
+}
+.search >>> .el-input__inner {
+  height: 30px !important;
+  border: none;
+}
+.search >>> .el-input__icon {
+  line-height: 30px !important;
+}
+.top-hide {
+  top: -40px;
+}
+.top-2-hide {
+  top: -260px;
+}
+.top-3-hide {
+  top: -220px;
+}
+.left-hide {
+  left: -50px;
+}
+.right-1-hide {
+  right: -70px;
+}
+.right-2-hide {
+  right: -50px;
 }
 .title {
   font-weight: 700;
   font-size: 26px;
   color: #010101;
 }
-.top-line {
-  display: flex;
-}
-.slider {
-  flex-grow: 1;
-  margin: 0 40px;
-  margin-right: 10px;
-}
-.card-view {
-  margin-top: 30px;
-  display: grid;
-  grid-template-columns: repeat(4, 394px);
-  justify-content: space-between;
-  row-gap: 32px;
-}
-.add {
+.card {
   width: 100%;
-  height: 260px;
-  cursor: pointer;
+  box-shadow: 0px 0px 37px 2px rgba(0, 0, 0, 0.1);
+  border-radius: 21px;
+  overflow: hidden;
+}
+.nav {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  height: 66px;
+  border-bottom: 1px solid #d9d9d9;
+  position: sticky;
+  top: 0;
+  z-index: 99;
+}
+.nav-item {
+  width: 140px;
+  height: 60px;
+  padding-top: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #d9d9d9;
-  border-radius: 21px;
-}
-.add img {
-  width: 100px;
-  height: 100px;
-}
-.course {
-  width: 100%;
-  height: 260px;
-  background: #d9d9d9;
-  border-radius: 21px;
-  background-image: url("../assets/back.svg");
-  background-size: 100% 100%;
-  padding: 14px 24px;
-  padding-bottom: 25px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  cursor: pointer;
-  overflow: hidden;
-  position: relative;
-}
-.delete {
-  position: absolute;
-  right: -80px;
-  transition: all 0.3s;
-  top: 0;
-  width: 80px;
-  height: 100%;
-}
-.course:hover .delete {
-  right: 0;
-}
-.num {
-  font-size: 16px;
-  color: #ffffff;
-  margin: 0;
-  font-style: italic;
-}
-.course-info {
-  display: flex;
-  flex-direction: column;
-}
-.name-line {
-  display: flex;
-  align-items: center;
-  margin-bottom: 7px;
-}
-.name-line p {
+  font-weight: 700;
   font-size: 20px;
   color: #333333;
-  margin: 0;
-  margin-right: 8px;
+  cursor: pointer;
+  z-index: 99;
 }
-.name-line img {
-  width: 24px;
-  height: 24px;
+.active {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+}
+.capsule {
+  height: 2px;
+  width: 40px;
+  background: #333333;
+  position: absolute;
+  left: 50%;
+  bottom: -2px;
+  border-radius: 4px;
+  transform: translateX(calc(-50% - 70px));
+  transition: all 0.3s;
+}
+.active0 {
+  transform: translateX(calc(-50% - 70px));
+}
+.active1 {
+  transform: translateX(calc(-50% + 70px));
+}
+.map {
+  position: relative;
+  width: 1696px;
+  height: 943px;
+  box-shadow: 0px 0px 37px 2px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  overflow: hidden;
+}
+.grid {
+  display: grid;
+  width: 1696px;
+  height: 943px;
+  gap: 36px;
+  grid-template-columns: 3fr 2fr;
+  grid-template-rows: 1fr 1fr;
+}
+.grid-item-1 {
+  grid-row-start: 1;
+  grid-row-end: 3;
+}
+.grid-item {
+  background-color: #ffffff;
+  box-shadow: 0px 0px 37px 2px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  overflow: hidden;
+  padding: 24px 36px;
+}
+.item-top-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.item-title {
+  display: flex;
+  align-items: center;
+}
+.item-title p {
+  font-family: "Smiley Sans";
+  font-style: italic;
+  font-size: 20px;
+  color: #1f1f1f;
+  margin: 0;
+}
+.item-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  background-color: #afafaf;
+  margin: 6px;
+}
+.convert-icon {
+  width: 26px;
+  height: 26px;
   cursor: pointer;
 }
-.more-info {
-  margin: 0;
-  font-size: 14px;
-  color: #c0c0c0;
+.grid-table {
+  width: 100%;
+  height: calc(100% - 60px);
+}
+.map-view {
+  position: relative;
+  width: 100%;
+  height: calc(100% - 60px);
+}
+.action-line {
+  width: 100%;
+  display: flex;
+  margin: 12px 0;
+}
+.action {
+  margin: 6px;
+  margin-left: 0;
+  padding: 3px 14px;
+  font-size: 13px;
+  color: #333333;
+  background: #dddddd;
+  border: 0.4px solid #dddddd;
+  border-radius: 15px;
+  cursor: pointer;
+}
+.row-table {
+  display: flex;
+  overflow-x: auto;
+}
+.row-table-item {
+  width: max-content;
+  height: 780px;
+  margin-right: 40px;
+  flex-shrink: 0;
+}
+.group-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin: 0 auto;
+}
+.row-table-item-2 {
+  width: max-content;
+  height: 290px;
+  margin-right: 40px;
+  flex-shrink: 0;
 }
 </style>

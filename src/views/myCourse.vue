@@ -236,6 +236,7 @@ export default {
   right: 0;
 }
 .num {
+  font-family: "Smiley Sans";
   font-size: 16px;
   color: #ffffff;
   margin: 0;

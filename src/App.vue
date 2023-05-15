@@ -23,6 +23,10 @@ export default {
   font-family: "PingFangSC";
   src: url("./assets/font/PingFangSC.ttf");
 }
+@font-face {
+  font-family: "Smiley Sans";
+  src: url("./assets/font/SmileySans.otf");
+}
 * {
   font-family: "PingFangSC";
   box-sizing: border-box;
@@ -55,23 +59,39 @@ export default {
   text-align: center;
 }
 ::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1);
+  background: transparent;
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar {
   -webkit-appearance: none;
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-thumb {
   cursor: pointer;
   border-radius: 5px;
-  background: rgba(0, 0, 0, 0.25);
+  background: #ececec;
   transition: color 0.2s ease;
 }
 .mr-20 {
   margin-right: 20px;
+}
+img {
+  -webkit-user-drag: none;
+  user-select: none;
+}
+.x6-widget-selection-box {
+  border: 3px dashed #3ab6f5;
+}
+
+.x6-widget-selection-inner {
+  border: 2px solid #3ab6f5;
+}
+.x6-widget-snapline-vertical,
+.x6-widget-snapline-horizontal {
+  stroke: #3ab6f5;
+  stroke-width: 1px;
 }
 </style>

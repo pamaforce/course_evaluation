@@ -1,10 +1,21 @@
 <template>
   <div>
-    <div class="wrapper">
+    <div class="wrapper" v-if="showWrapper">
       <p class="title">课程详情</p>
       <img src="../assets/card.svg" class="card" />
     </div>
-    <div class="nav">
+    <div
+      class="nav"
+      ref="stickyElement"
+      :style="showWrapper ? 'width:100%' : ''"
+    >
+      <div
+        class="backBtn"
+        v-if="!showWrapper"
+        @click="() => (showWrapper = true)"
+      >
+        返回
+      </div>
       <div
         :class="'nav-item' + (activeItem === 0 ? ' active' : '')"
         @click="changeActiveItem(0)"
@@ -466,6 +477,7 @@ export default {
       activeItem: 0,
       showMenu: false,
       showGrid: true,
+      showWrapper: true,
       search: "",
       isMap: 0,
       isMap1: 0,
@@ -618,6 +630,44 @@ export default {
         "#71CADE",
         "#A2ABDA",
       ],
+      groups: {
+        in: {
+          attrs: {
+            circle: {
+              r: 5,
+              magnet: true,
+              stroke: "#C2C8D5",
+              strokeWidth: 1,
+              fill: "#fff",
+            },
+          },
+          position: {
+            name: "absolute",
+            args: {
+              x: "8%",
+              y: 36,
+            },
+          },
+        },
+        out: {
+          attrs: {
+            circle: {
+              r: 5,
+              magnet: true,
+              stroke: "#C2C8D5",
+              strokeWidth: 1,
+              fill: "#fff",
+            },
+          },
+          position: {
+            name: "absolute",
+            args: {
+              x: "92%",
+              y: 36,
+            },
+          },
+        },
+      },
     };
   },
   methods: {
@@ -852,45 +902,16 @@ export default {
           },
         });
       });
+      graph.on("edge:mouseup", ({ e, edge }) => {
+        console.log(edge.getTargetCell(), e);
+        if (!edge.getTargetCell()) {
+          const targetPoint = graph.clientToLocal(e.clientX, e.clientY);
+          this.createNewNodeAndConnect(targetPoint, edge);
+          console.log(edge);
+        }
+      });
       this.setGraph(graph);
-      const groups = {
-        in: {
-          attrs: {
-            circle: {
-              r: 5,
-              magnet: true,
-              stroke: "#C2C8D5",
-              strokeWidth: 1,
-              fill: "#fff",
-            },
-          },
-          position: {
-            name: "left",
-            args: {
-              dx: 15,
-              dy: 10,
-            },
-          },
-        },
-        out: {
-          attrs: {
-            circle: {
-              r: 5,
-              magnet: true,
-              stroke: "#C2C8D5",
-              strokeWidth: 1,
-              fill: "#fff",
-            },
-          },
-          position: {
-            name: "right",
-            args: {
-              dx: -15,
-              dy: 10,
-            },
-          },
-        },
-      };
+      const groups = this.groups;
       const nameNode = graph.addNode({
         shape: "custom-vue-node-name-card",
         x: 0,
@@ -976,6 +997,30 @@ export default {
         this.showMenu = true;
       }, 1000);
       console.log(graph);
+    },
+    createNewNodeAndConnect(targetPoint, edge) {
+      const segmentNode = this.graph.addNode({
+        shape: "custom-vue-node-segment-card",
+        x: targetPoint.x,
+        y: targetPoint.y,
+        data: {
+          title: "环节名称",
+          score: 0,
+        },
+        ports: {
+          groups: this.groups,
+          items: [
+            { id: "in-port-1", group: "in" },
+            { id: "out-port-1", group: "out" },
+          ],
+        },
+      });
+      this.graph.addEdge({
+        shape: "dag-edge",
+        zIndex: -1,
+        source: edge.getSource(),
+        target: { cell: segmentNode, port: "in-port-1" },
+      });
     },
     initGraph0() {
       const graph = new Graph({
@@ -1307,9 +1352,21 @@ export default {
         });
       });
     },
+    handleScroll() {
+      const stickyElement = this.$refs.stickyElement;
+      const elementTop = stickyElement.getBoundingClientRect().top;
+      if (elementTop <= 0) {
+        this.showWrapper = false;
+      }
+    },
   },
   mounted() {
     this.initGraph();
+    window.addEventListener("scroll", this.handleScroll);
+  },
+  beforeDestroy() {
+    // 组件销毁时移除事件监听器
+    window.removeEventListener("scroll", this.handleScroll);
   },
   created() {},
 };
@@ -1464,7 +1521,7 @@ export default {
   overflow: hidden;
 }
 .nav {
-  width: 100%;
+  width: calc(100% - 640px);
   display: flex;
   justify-content: center;
   align-items: flex-end;
@@ -1473,6 +1530,7 @@ export default {
   position: sticky;
   top: 0;
   z-index: 99;
+  margin: 0 auto;
 }
 .nav-item {
   width: 140px;
@@ -1486,6 +1544,13 @@ export default {
   color: #333333;
   cursor: pointer;
   z-index: 99;
+}
+.backBtn {
+  position: absolute;
+  cursor: pointer;
+  left: 50px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 .active {
   background: linear-gradient(

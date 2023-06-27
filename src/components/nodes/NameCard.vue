@@ -62,7 +62,7 @@ export default {
 .title {
   font-family: "Smiley Sans";
   font-style: italic;
-  font-size: 14px;
+  font-size: 16px;
   color: #ffffff;
   background-color: transparent;
   outline: none;

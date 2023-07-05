@@ -44,6 +44,7 @@
           </div>
           <p class="more-info">{{ item.term }} | {{ item.class }}</p>
         </div>
+        <div class="course-wrapper"></div>
         <img
           src="../assets/delete.svg"
           class="delete"
@@ -232,7 +233,13 @@ export default {
   width: 80px;
   height: 100%;
 }
-.course:hover .delete {
+.course-wrapper {
+  position: absolute;
+  width: 30%;
+  right: 0;
+  height: 100%;
+}
+.course-wrapper:hover + .delete {
   right: 0;
 }
 .num {

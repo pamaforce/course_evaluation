@@ -1,0 +1,134 @@
+<template>
+  <div class="login">
+    <div class="box">
+      <p class="title">天津大学课程评价系统</p>
+      <p class="label">账号</p>
+      <el-input
+        v-model="account"
+        class="account"
+        placeholder="teacher1或student1或expert1"
+      ></el-input>
+      <p class="label">密码</p>
+      <el-input
+        v-model="password"
+        class="password"
+        type="password"
+        placeholder="默认为password"
+        show-password
+        @keydown.enter.native="toLogin"
+      ></el-input>
+      <el-button
+        auto-insert-space
+        type="primary"
+        class="btn"
+        @click="toLogin"
+        :loading="loading"
+        >登 录</el-button
+      >
+    </div>
+  </div>
+</template>
+
+<script>
+import { setToken } from "../utils/auth";
+export default {
+  data() {
+    return {
+      account: "",
+      password: "",
+      loading: false,
+      authMap: {
+        teacher1: 1,
+        student1: 2,
+        expert1: 3,
+      },
+    };
+  },
+  methods: {
+    toLogin() {
+      if (!this.account) {
+        this.$message.warning("请输入您的账号");
+        return;
+      }
+      if (!this.password) {
+        this.$message.warning("请输入您的密码");
+        return;
+      }
+      this.loading = true;
+      if (
+        (this.account === "teacher1" ||
+          this.account === "expert1" ||
+          this.account === "student1") &&
+        this.password === "password"
+      ) {
+        setTimeout(() => {
+          this.$message.success("登录成功");
+          this.loading = false;
+          setToken(this.authMap[this.account] + "_" + this.account);
+          this.$router.push("/myCourse");
+        }, 500);
+      } else {
+        this.$message.error("账号或密码错误，请认真检查一下哦~");
+        this.loading = false;
+      }
+    },
+  },
+};
+</script>
+
+<style scoped>
+.login {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+}
+.box {
+  position: relative;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+}
+.account,
+.password {
+  width: 350px;
+  height: 45px;
+  margin-bottom: 70px;
+  font-size: 20px;
+}
+.account :deep(.el-input__wrapper),
+.password :deep(.el-input__wrapper) {
+  border-radius: 10px;
+  border: 1px solid #818181;
+}
+.title {
+  font-size: 36px;
+  font-weight: 700;
+  color: #000;
+  margin-top: 120px;
+  margin-bottom: 100px;
+}
+.label {
+  width: 350px;
+  font-size: 20px;
+  margin-bottom: 15px;
+  color: #000000;
+}
+.copyright {
+  font-size: 16px;
+  color: #014b88;
+  position: absolute;
+  bottom: 24px;
+  right: 50%;
+  transform: translateX(50%);
+}
+.btn {
+  padding: 20px 40px;
+  font-weight: 700;
+  font-size: 20px;
+  border-radius: 10px;
+}
+</style>

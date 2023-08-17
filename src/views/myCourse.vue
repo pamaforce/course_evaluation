@@ -242,6 +242,9 @@ export default {
 .course-wrapper:hover + .delete {
   right: 0;
 }
+.delete:hover {
+  right: 0;
+}
 .num {
   font-family: "Smiley Sans";
   font-size: 16px;

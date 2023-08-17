@@ -6,7 +6,7 @@
         :style="'width:' + (parseInt(score + '') + 10) + '%'"
       ></div>
       <input class="title" v-model="title" />
-      <input class="score" v-model="score" v-positive-integer />
+      <input class="score" v-model="score" v-positive-integer="max" />
     </div>
     <div class="bottom-div">
       <div class="flex-line">
@@ -71,7 +71,9 @@
           @change="handleValue3"
         >
           <el-option
-            v-for="item in options2"
+            v-for="item in options2.filter((item) =>
+              item.value === 1 ? !add : true
+            )"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -139,21 +141,11 @@
             评价本{{ value === 0 ? "生" : "组" }}
           </p>
         </div>
-        <div
-          class="icon-label switch"
-          :style="!value2 ? 'cursor:not-allowed' : ''"
-        >
-          <el-switch v-model="value5" :width="30" :disabled="!value2">
-          </el-switch>
+        <div class="icon-label switch">
+          <el-switch v-model="value5" :width="30"> </el-switch>
           <p
             @click="handleClick5"
-            :style="
-              value2
-                ? value5
-                  ? 'color:rgb(58, 182, 245);'
-                  : ''
-                : 'opacity:0.6'
-            "
+            :style="value5 ? 'color:rgb(58, 182, 245);' : ''"
           >
             组长评价
           </p>
@@ -169,7 +161,9 @@
           @change="handleValue8"
         >
           <el-option
-            v-for="item in options2"
+            v-for="item in options2.filter((item) =>
+              item.value === 1 ? !add : true
+            )"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -239,6 +233,7 @@ export default {
       title: "",
       score: 0,
       add: false,
+      max: 100,
       options: [
         {
           value: 0,
@@ -327,7 +322,9 @@ export default {
     handleAdd() {
       this.add = true;
       this.value8 = 2 - this.value3;
-      this.updateSize();
+      setTimeout(() => {
+        this.updateSize();
+      }, 50);
     },
     handleX(val = false) {
       if (val !== true) {
@@ -352,19 +349,34 @@ export default {
       this.value2 = !this.value2;
     },
     handleValue2(val) {
-      if (!val) {
-        this.value5 = false;
-      }
+      // if (!val) {
+      //   this.value5 = false;
+      // }
+      console.log(val);
     },
-    handleValue3() {
-      this.value6 = [];
-      this.value7 = [];
-      this.value5 = 0;
-      this.value4 = 0;
-      if (this.value3 === 1) {
+    handleValue3(val) {
+      if (val === 1) {
         this.add = false;
       }
-      this.updateSize();
+      if (this.add) {
+        if (val === this.value8) {
+          let tempV9 = [...this.value9];
+          let tempV10 = [...this.value10];
+          this.value9 = [...this.value6];
+          this.value10 = [...this.value7];
+          this.value6 = tempV9;
+          this.value7 = tempV10;
+          this.value8 = 2 - val;
+        }
+      } else {
+        this.value6 = [];
+        this.value7 = [];
+        this.value5 = 0;
+        this.value4 = 0;
+      }
+      setTimeout(() => {
+        this.updateSize();
+      }, 50);
     },
     handleValue8(val) {
       if (val === 1) {
@@ -373,15 +385,29 @@ export default {
         this.value5 = 0;
         this.value4 = 0;
       }
-      this.updateSize();
+      if (this.add) {
+        if (val === this.value3) {
+          let tempV6 = [...this.value6];
+          let tempV7 = [...this.value7];
+          this.value6 = [...this.value9];
+          this.value7 = [...this.value10];
+          this.value9 = tempV6;
+          this.value10 = tempV7;
+          this.value3 = 2 - val;
+        }
+      }
+      setTimeout(() => {
+        this.updateSize();
+      }, 50);
     },
     handleClick4() {
       this.value4 = !this.value4;
     },
     handleClick5() {
-      if (this.value2) {
-        this.value5 = !this.value5;
-      }
+      // if (this.value2) {
+      //   this.value5 = !this.value5;
+      // }
+      this.value5 = !this.value5;
     },
     updateSize() {
       this.$nextTick(() => {
@@ -395,9 +421,10 @@ export default {
     this.node = this.getNode();
     this.node.on("change:data", ({ current }) => {
       console.log(current);
-      const { title, score } = current;
+      const { title, score, max } = current;
       this.title = title;
       this.score = score;
+      this.max = max || 100;
     });
     this.title = this.node.data.title;
     this.score = this.node.data.score;
@@ -407,7 +434,7 @@ export default {
 </script>
 <style scoped>
 .name-card {
-  width: 380px;
+  width: 400px;
   height: max-content;
   border-radius: 8px;
   overflow: hidden;
@@ -431,7 +458,7 @@ export default {
   position: relative;
 }
 .bottom-div {
-  margin-top: 25px;
+  margin-top: 35px;
   width: 100%;
   position: relative;
   padding: 0 calc(8% - 7px);
@@ -445,6 +472,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  margin-left: -8px;
 }
 .flex-line-2 .switch {
   margin-right: 12px !important;

@@ -7,15 +7,14 @@
       </div>
       <div class="user">
         <img src="../assets/logo.svg" alt="logo" />
-        <el-dropdown trigger="click">
+        <el-dropdown trigger="click" @command="handleCommand">
           <span class="el-dropdown-link">
-            您好，教师用户TJU2503<i
-              class="el-icon-arrow-down el-icon--right"
-            ></i>
+            您好，{{ authType[getToken().split("_")[0]] }}用户{{
+              getToken().split("_")[1]
+            }}<i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>退出登录</el-dropdown-item>
-            <el-dropdown-item>切换设置端</el-dropdown-item>
+            <el-dropdown-item command="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -39,11 +38,17 @@
 </template>
 
 <script>
+import { getToken, removeToken } from "@/utils/auth";
 export default {
   data() {
     return {
       activeItem: 0,
       showNav: false,
+      authType: {
+        1: "教师",
+        2: "学生",
+        3: "专家",
+      },
     };
   },
   watch: {
@@ -56,6 +61,21 @@ export default {
     },
   },
   methods: {
+    getToken() {
+      return getToken() || "_";
+    },
+    handleCommand(val) {
+      switch (val) {
+        case "logout":
+          this.toLogout();
+          break;
+      }
+    },
+    toLogout() {
+      removeToken();
+      this.$message.success("退出登录成功");
+      this.$router.push("/login");
+    },
     changeActiveItem(index) {
       this.activeItem = index;
       if (index === 0) {

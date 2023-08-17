@@ -63,6 +63,15 @@
           ></el-input>
         </div>
         <div :class="'list' + (showMenu ? '' : ' top-3-hide')"></div>
+        <div :class="'slide' + (showMenu ? '' : ' bottom-1-hide')">
+          <el-slider
+            v-model="slideValue"
+            :min="0.8"
+            :max="3"
+            :step="0.01"
+            @input="handleSlide"
+          ></el-slider>
+        </div>
       </div>
     </div>
     <div class="wrapper" v-else>
@@ -616,6 +625,7 @@ export default {
           stu_num: "3019204220",
         },
       ],
+      slideValue: 0,
       graph: null,
       graph0: null,
       graph1: null,
@@ -826,7 +836,7 @@ export default {
           eventTypes: ["rightMouseDown"],
         },
         mousewheel: true,
-        scaling: { max: 4, min: 1 },
+        scaling: { max: 3, min: 0.8 },
         grid: {
           visible: true,
           type: "doubleMesh",
@@ -891,11 +901,15 @@ export default {
       );
       this.graph = graph;
       this.showGrid = true;
+      graph.on("scale", () => {
+        this.slideValue = parseFloat(this.graph.zoom().toFixed(2));
+      });
       graph.on("blank:dblclick", () => {
         graph.zoomToFit({ maxScale: 3 });
         graph.centerContent();
       });
       graph.on("edge:connected", ({ edge }) => {
+        console.log(edge);
         edge.attr({
           line: {
             strokeDasharray: "",
@@ -934,6 +948,7 @@ export default {
         data: {
           title: "环节名称1",
           score: 15,
+          max: 100,
         },
         ports: {
           groups: groups,
@@ -950,6 +965,7 @@ export default {
         data: {
           title: "环节名称2",
           score: 50,
+          max: 100,
         },
         ports: {
           groups: groups,
@@ -966,6 +982,7 @@ export default {
         data: {
           title: "环节名称3",
           score: 35,
+          max: 100,
         },
         ports: {
           groups: groups,
@@ -997,6 +1014,9 @@ export default {
         this.showMenu = true;
       }, 1000);
       console.log(graph);
+    },
+    handleSlide(val) {
+      this.graph.zoomTo(val);
     },
     createNewNodeAndConnect(targetPoint, edge) {
       const segmentNode = this.graph.addNode({
@@ -1484,6 +1504,13 @@ export default {
   border-radius: 12px;
   transition: all 0.6s ease-in-out;
 }
+.slide {
+  position: absolute;
+  bottom: 30px;
+  right: 80px;
+  width: 200px;
+  transition: all 0.6s ease-in-out;
+}
 .search >>> .el-input__inner {
   height: 30px !important;
   border: none;
@@ -1499,6 +1526,9 @@ export default {
 }
 .top-3-hide {
   top: -220px;
+}
+.bottom-1-hide {
+  bottom: -60px;
 }
 .left-hide {
   left: -50px;

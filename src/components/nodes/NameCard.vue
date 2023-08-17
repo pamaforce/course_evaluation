@@ -37,7 +37,7 @@ export default {
 </script>
 <style scoped>
 .name-card {
-  width: 220px;
+  width: 240px;
   height: 64px;
   border-radius: 8px;
   overflow: hidden;

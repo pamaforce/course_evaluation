@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <MainHeader v-if="$route.name!=='login'"/>
+    <MainHeader v-if="$route.name !== 'login'" />
     <router-view></router-view>
   </div>
 </template>
@@ -93,5 +93,8 @@ img {
 .x6-widget-snapline-horizontal {
   stroke: #3ab6f5;
   stroke-width: 1px;
+}
+.x6-cell[data-shape="custom-vue-node-text-rect"] {
+  pointer-events: none;
 }
 </style>

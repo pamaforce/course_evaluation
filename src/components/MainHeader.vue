@@ -2,11 +2,11 @@
   <div>
     <div class="header">
       <div class="logo" @click="$router.push('/')">
-        <img src="../assets/logo.svg" alt="logo" />
+        <img src="../assets/logo.png" alt="logo" />
         <p>天津大学课程评价系统</p>
       </div>
       <div class="user">
-        <img src="../assets/logo.svg" alt="logo" />
+        <img src="../assets/avatar.png" alt="logo" />
         <el-dropdown trigger="click" @command="handleCommand">
           <span class="el-dropdown-link">
             您好，{{ authType[getToken().split("_")[0]] }}用户{{

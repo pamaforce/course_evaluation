@@ -8,6 +8,7 @@
         "lint": "vue-cli-service lint"
     },
     "dependencies": {
+        "@antv/layout": "^0.3.23",
         "@antv/x6": "^2.10.1",
         "@antv/x6-plugin-clipboard": "^2.1.6",
         "@antv/x6-plugin-history": "^2.2.3",

@@ -1182,7 +1182,7 @@ export default {
     activeForceLayout(graph, no, k) {
       let memberGroups = [5, 7, 3, 12, 18, 8];
       let numType = [
-        [800, 300],
+        [600, 300],
         [700, 300],
         [400, 200],
       ];
@@ -1191,32 +1191,13 @@ export default {
       }
       const centerList = [[0, 0]];
       for (let i = 1; i < memberGroups.length; i++) {
-        let circleX,
-          circleY,
-          validPosition = false;
-        do {
-          validPosition = true;
-          const angle = Math.random() * 2 * Math.PI;
-          const radius = numType[no][0];
-          const offsetX = Math.cos(angle) * radius;
-          const offsetY = Math.sin(angle) * radius;
-          circleX = offsetX;
-          circleY = offsetY;
-          for (let j = 0; j < i; j++) {
-            const prevCircleX = centerList[j][0];
-            const prevCircleY = centerList[j][1];
-            const distance = this.calculateDistance(
-              circleX,
-              circleY,
-              prevCircleX,
-              prevCircleY
-            );
-            if (distance < numType[no][1]) {
-              validPosition = false;
-              break;
-            }
-          }
-        } while (!validPosition);
+        let circleX, circleY;
+        const angle = (2 * Math.PI * i) / (memberGroups.length - 1);
+        const radius = numType[no][0];
+        const offsetX = Math.cos(angle) * radius;
+        const offsetY = Math.sin(angle) * radius;
+        circleX = offsetX;
+        circleY = offsetY;
         centerList.push([circleX, circleY]);
       }
       const model = { nodes: [], edges: [], center: { x: 0, y: 0 } };

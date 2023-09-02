@@ -43,7 +43,7 @@ let routes = [
 	{
 		path: "/evaluationProcess",
 		name: "evaluationProcess",
-		component: () => import("@/views/evaluationProcess.vue"),
+		component: () => import("@/views/evaluate.vue"),
 		meta: {
 			title: "评价进程",
 			authType: 5,
@@ -52,7 +52,7 @@ let routes = [
 	{
 		path: "/evaluationResult",
 		name: "evaluationResult",
-		component: () => import("@/views/evaluationResult.vue"),
+		component: () => import("@/views/evaluate.vue"),
 		meta: {
 			title: "评价结果",
 			authType: 5,

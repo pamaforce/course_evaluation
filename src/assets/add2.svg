@@ -1,5 +1,5 @@
 <svg width="6" height="6" viewBox="0 0 6 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-<circle cx="3" cy="3" r="3" fill="#3AB6F5"/>
-<path d="M3.00781 0.878906L2.99021 5.12151" stroke="white" stroke-width="0.5" stroke-linecap="round"/>
-<path d="M0.878906 2.99219L5.12151 3.00979" stroke="white" stroke-width="0.5" stroke-linecap="round"/>
+    <circle cx="3" cy="3" r="3" fill="#15c3a1" />
+    <path d="M3.00781 0.878906L2.99021 5.12151" stroke="white" stroke-width="0.5" stroke-linecap="round" />
+    <path d="M0.878906 2.99219L5.12151 3.00979" stroke="white" stroke-width="0.5" stroke-linecap="round" />
 </svg>

@@ -10,20 +10,21 @@
       :style="showWrapper ? 'width:100%' : ''"
     >
       <div
-        class="backBtn"
-        v-if="!showWrapper"
-        @click="() => (showWrapper = true)"
-      >
-        返回
-      </div>
-      <div
-        :class="'nav-item' + (activeItem === 0 ? ' active' : '')"
+        :class="
+          'nav-item' +
+          (activeItem === 0 ? ' active' : '') +
+          (showWrapper ? ' black-text' : '')
+        "
         @click="changeActiveItem(0)"
       >
         教学结构
       </div>
       <div
-        :class="'nav-item' + (activeItem === 1 ? ' active' : '')"
+        :class="
+          'nav-item' +
+          (activeItem === 1 ? ' active' : '') +
+          (showWrapper ? ' black-text' : '')
+        "
         @click="changeActiveItem(1)"
       >
         评价角色
@@ -518,7 +519,7 @@ Graph.registerEdge(
     inherit: "edge",
     attrs: {
       line: {
-        stroke: "#3ab6f5",
+        stroke: "#15c3a1",
         strokeWidth: 2,
         targetMarker: null,
       },
@@ -739,7 +740,7 @@ export default {
             name: "absolute",
             args: {
               x: "8%",
-              y: 36,
+              y: "36px",
             },
           },
         },
@@ -757,7 +758,7 @@ export default {
             name: "absolute",
             args: {
               x: "92%",
-              y: 36,
+              y: "36px",
             },
           },
         },
@@ -972,7 +973,7 @@ export default {
             args: {
               attrs: {
                 fill: "#fff",
-                stroke: "#3ab6f5",
+                stroke: "#15c3a1",
                 strokeWidth: 2,
               },
             },
@@ -1061,8 +1062,8 @@ export default {
       });
       const segmentNode3 = graph.addNode({
         shape: "custom-vue-node-segment-card",
-        x: 400,
-        y: 200,
+        x: 950,
+        y: 140,
         data: {
           title: "环节名称3",
           score: 35,
@@ -1091,7 +1092,7 @@ export default {
       graph.addEdge({
         shape: "dag-edge",
         zIndex: -1,
-        source: { cell: nameNode, port: "out-port-1" },
+        source: { cell: segmentNode2, port: "out-port-1" },
         target: { cell: segmentNode3, port: "in-port-1" },
       });
       setTimeout(() => {
@@ -1157,7 +1158,7 @@ export default {
             args: {
               padding: -1,
               attrs: {
-                stroke: "#73d13d",
+                stroke: "#15c3a1",
               },
             },
           },
@@ -1328,7 +1329,7 @@ export default {
             args: {
               padding: -1,
               attrs: {
-                stroke: "#73d13d",
+                stroke: "#15c3a1",
               },
             },
           },
@@ -1419,7 +1420,7 @@ export default {
             args: {
               padding: -1,
               attrs: {
-                stroke: "#73d13d",
+                stroke: "#15c3a1",
               },
             },
           },
@@ -1448,14 +1449,31 @@ export default {
         this.showWrapper = false;
       }
     },
+    handleBack() {
+      console.log(this.showWrapper);
+      if (this.showWrapper) {
+        this.$router.push("/");
+      } else {
+        this.showWrapper = true;
+      }
+    },
   },
   mounted() {
+    let px = parseFloat(
+      document.getElementsByTagName("html")[0].style.fontSize.split("px")[0]
+    );
+    this.groups.in.position.args.y = 1.875 * px * 1.5;
+    this.groups.out.position.args.y = 1.875 * px * 1.5;
+    this.groups.in.attrs.circle.r = (0.825 / 2) * px;
+    this.groups.out.attrs.circle.r = (0.825 / 2) * px;
     this.initGraph();
     window.addEventListener("scroll", this.handleScroll);
+    this.$bus.$on("back", this.handleBack);
   },
   beforeDestroy() {
     // 组件销毁时移除事件监听器
     window.removeEventListener("scroll", this.handleScroll);
+    this.$bus.$off("back", this.handleBack);
   },
   created() {},
 };
@@ -1465,6 +1483,7 @@ export default {
 .wrapper {
   padding: 60px 112px;
   position: relative;
+  overflow-x: hidden;
 }
 .btn1 {
   position: absolute;
@@ -1478,12 +1497,12 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 0.5px solid #dddddd;
+  border: 0.5px solid #15c3a1;
   font-size: 16px;
   letter-spacing: 0.05em;
-  color: #333333;
-  background-color: white;
-  transition: all 0.5s ease-in-out;
+  color: #fff;
+  background-color: #333;
+  transition: top 0.5s ease-in-out;
 }
 .btn2 {
   position: absolute;
@@ -1497,12 +1516,12 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 0.5px solid #dddddd;
+  border: 0.5px solid #15c3a1;
   font-size: 16px;
   letter-spacing: 0.05em;
-  color: #333333;
-  background-color: white;
-  transition: all 0.6s ease-in-out;
+  color: #fff;
+  background-color: #333;
+  transition: top 0.6s ease-in-out;
 }
 .eye {
   position: absolute;
@@ -1627,7 +1646,7 @@ export default {
   overflow: hidden;
 }
 .nav {
-  width: calc(100% - 640px);
+  width: max-content;
   display: flex;
   justify-content: center;
   align-items: flex-end;
@@ -1647,28 +1666,25 @@ export default {
   align-items: center;
   font-weight: 700;
   font-size: 20px;
-  color: #333333;
+  color: #fff;
   cursor: pointer;
   z-index: 99;
 }
-.backBtn {
-  position: absolute;
-  cursor: pointer;
-  left: 50px;
-  top: 50%;
-  transform: translateY(-50%);
+.black-text {
+  color: black;
 }
 .active {
   background: linear-gradient(
     180deg,
-    rgba(0, 0, 0, 0) 0%,
-    rgba(0, 0, 0, 0.1) 100%
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.1) 100%
   );
+  color: #15c3a1;
 }
 .capsule {
   height: 2px;
   width: 40px;
-  background: #333333;
+  background: #068a70;
   position: absolute;
   left: 50%;
   bottom: -2px;
@@ -1685,15 +1701,16 @@ export default {
 .map {
   position: relative;
   width: 1696px;
-  height: 943px;
+  height: calc(100vh - 180px);
   box-shadow: 0px 0px 37px 2px rgba(0, 0, 0, 0.1);
   border-radius: 20px;
   overflow: hidden;
+  box-sizing: border-box;
 }
 .grid {
   display: grid;
   width: 1696px;
-  height: 943px;
+  height: calc(100vh - 180px);
   gap: 36px;
   grid-template-columns: 3fr 2fr;
   grid-template-rows: 1fr 1fr;

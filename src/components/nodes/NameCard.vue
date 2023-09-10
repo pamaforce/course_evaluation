@@ -43,14 +43,17 @@ export default {
   overflow: hidden;
   background: linear-gradient(
     90deg,
-    rgba(217, 217, 217, 0.6) 0%,
-    #d9d9d9 17.5%,
-    #d9d9d9 81.56%,
-    rgba(217, 217, 217, 0.6) 100%
+    rgba(199, 241, 233, 0.6) 0%,
+    rgba(199, 241, 233, 0.45) 0.01%,
+    rgba(199, 241, 233, 0.55) 17.5%,
+    rgba(199, 241, 233, 0.55) 83.12%,
+    rgba(199, 241, 233, 0.45) 100%
   );
+  backdrop-filter: blur(1px);
+  border: 0.2px solid #333;
 }
 .top-div {
-  background-color: #6b6b6b;
+  background-color: #15c3a1;
   height: 30px;
   width: 100%;
   display: flex;
@@ -63,7 +66,7 @@ export default {
   font-family: "Smiley Sans";
   font-style: italic;
   font-size: 16px;
-  color: #ffffff;
+  color: #000000;
   background-color: transparent;
   outline: none;
   border: none;
@@ -75,11 +78,11 @@ export default {
   background-color: transparent;
   border-radius: 2px;
   text-align: center;
-  border: 0.2px solid white;
+  border: 0.2px solid #333333;
   font-family: "Smiley Sans";
   font-style: italic;
   font-size: 8px;
-  color: #e7e7e7;
+  color: #000000;
   outline: none;
 }
 </style>

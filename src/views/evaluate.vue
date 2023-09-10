@@ -128,6 +128,15 @@ export default {
     toPath(path) {
       this.$router.push(path);
     },
+    handleBack() {
+      this.$router.push("/courseDetail");
+    },
+  },
+  mounted() {
+    this.$bus.$on("back", this.handleBack);
+  },
+  beforeDestroy() {
+    this.$bus.$off("back", this.handleBack);
   },
 };
 </script>
@@ -138,6 +147,7 @@ export default {
   position: relative;
   display: flex;
   overflow-x: hidden;
+  padding-bottom: 60px;
 }
 .progress {
   width: 1500px;

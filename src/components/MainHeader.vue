@@ -5,6 +5,13 @@
         <img src="../assets/logo.png" alt="logo" />
         <p>天津大学课程评价系统</p>
       </div>
+      <div
+        class="backBtn"
+        @click="handleBack"
+        v-if="$route.path != '/myCourse'"
+      >
+        返回
+      </div>
       <div class="user">
         <img src="../assets/avatar.png" alt="logo" />
         <el-dropdown trigger="click" @command="handleCommand">
@@ -61,6 +68,9 @@ export default {
     },
   },
   methods: {
+    handleBack() {
+      this.$bus.$emit("back");
+    },
     getToken() {
       return getToken() || "_";
     },
@@ -92,7 +102,7 @@ export default {
 .header {
   width: 100%;
   height: 66px;
-  background-color: #d9d9d9;
+  background-color: #2c2c2c;
   padding: 0 112px;
   display: flex;
   justify-content: space-between;
@@ -101,13 +111,14 @@ export default {
   position: fixed;
   top: 0;
   z-index: 98;
+  border-bottom: 1px solid #15c3a1;
 }
 .logo {
   display: flex;
   align-items: center;
   font-weight: 700;
   font-size: 18px;
-  color: #010101;
+  color: #ffffff;
   cursor: pointer;
 }
 .logo img {
@@ -118,6 +129,10 @@ export default {
 .user {
   display: flex;
   align-items: center;
+  color: #fff;
+}
+.el-dropdown {
+  color: #fff;
 }
 .user img {
   width: 35px;
@@ -148,21 +163,22 @@ export default {
   align-items: center;
   font-weight: 700;
   font-size: 20px;
-  color: #333333;
+  color: #ffffff;
   cursor: pointer;
   z-index: 99;
 }
 .active {
   background: linear-gradient(
     180deg,
-    rgba(0, 0, 0, 0) 0%,
-    rgba(0, 0, 0, 0.1) 100%
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.1) 100%
   );
+  color: #15c3a1;
 }
 .capsule {
   height: 2px;
   width: 40px;
-  background: #333333;
+  background: #068a70;
   position: absolute;
   left: 50%;
   bottom: -2px;
@@ -175,5 +191,14 @@ export default {
 }
 .active1 {
   transform: translateX(calc(-50% + 70px));
+}
+.backBtn {
+  position: absolute;
+  cursor: pointer;
+  left: 380px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #fff;
+  z-index: 99;
 }
 </style>

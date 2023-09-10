@@ -1,14 +1,15 @@
 <template>
   <div class="login">
+    <img src="../assets/bg.svg" class="login-bg" />
     <div class="box">
       <p class="title">天津大学课程评价系统</p>
-      <p class="label">账号</p>
+      <!-- <p class="label">账号</p> -->
       <el-input
         v-model="account"
         class="account"
         placeholder="teacher1或student1或expert1"
       ></el-input>
-      <p class="label">密码</p>
+      <!-- <p class="label">密码</p> -->
       <el-input
         v-model="password"
         class="password"
@@ -82,7 +83,14 @@ export default {
   height: 100vh;
   overflow: hidden;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
+  background-color: #000000;
+}
+.login-bg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
 }
 .box {
   position: relative;
@@ -90,7 +98,9 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   height: 100vh;
+  width: 50%;
 }
 .account,
 .password {
@@ -99,23 +109,27 @@ export default {
   margin-bottom: 70px;
   font-size: 20px;
 }
+.account :deep(.el-input__inner),
+.password :deep(.el-input__inner) {
+  text-align: center;
+}
 .account :deep(.el-input__wrapper),
 .password :deep(.el-input__wrapper) {
   border-radius: 10px;
   border: 1px solid #818181;
 }
 .title {
+  margin: 0;
   font-size: 36px;
   font-weight: 700;
-  color: #000;
-  margin-top: 120px;
+  color: #15c3a1;
   margin-bottom: 100px;
 }
 .label {
   width: 350px;
   font-size: 20px;
   margin-bottom: 15px;
-  color: #000000;
+  color: #15c3a1;
 }
 .copyright {
   font-size: 16px;
@@ -126,9 +140,11 @@ export default {
   transform: translateX(50%);
 }
 .btn {
-  padding: 20px 40px;
+  padding: 12px 60px;
   font-weight: 700;
   font-size: 20px;
-  border-radius: 10px;
+  border-radius: 30px;
+  background-color: #15c3a1;
+  border: none;
 }
 </style>

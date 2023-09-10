@@ -83,18 +83,31 @@ img {
   user-select: none;
 }
 .x6-widget-selection-box {
-  border: 3px dashed #3ab6f5;
+  border: 3px dashed #15c3a1;
 }
 
 .x6-widget-selection-inner {
-  border: 2px solid #3ab6f5;
+  border: 2px solid #15c3a1;
 }
 .x6-widget-snapline-vertical,
 .x6-widget-snapline-horizontal {
-  stroke: #3ab6f5;
+  stroke: #15c3a1;
   stroke-width: 1px;
 }
 .x6-cell[data-shape="custom-vue-node-text-rect"] {
   pointer-events: none;
+}
+.el-slider__bar {
+  background-color: #068a70;
+}
+.el-slider__button {
+  border: 3px solid #333;
+  background-color: #6ab9a9;
+}
+.el-slider__stop {
+  background-color: #304f41;
+}
+.el-slider__runway {
+  background-color: #15c3a1;
 }
 </style>

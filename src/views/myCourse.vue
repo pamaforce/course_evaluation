@@ -36,6 +36,10 @@
         :key="i"
         @click.stop="toDetail(i)"
       >
+        <div
+          class="circle-bg"
+          :style="'width:' + item.size + 'rem;height:' + item.size + 'rem'"
+        ></div>
         <p class="num">选课人数：{{ item.num }}</p>
         <div class="course-info">
           <div class="name-line">
@@ -68,30 +72,35 @@ export default {
           name: "展示展览设计",
           term: "212202",
           class: "2019级宣怀1班",
+          size: 20,
         },
         {
           num: 65,
           name: "展示展览设计",
           term: "212202",
           class: "2019级宣怀1班",
+          size: 30,
         },
         {
           num: 65,
           name: "展示展览设计",
           term: "212202",
           class: "2019级宣怀1班",
+          size: 17,
         },
         {
           num: 65,
           name: "展示展览设计",
           term: "212202",
           class: "2019级宣怀1班",
+          size: 36,
         },
         {
           num: 65,
           name: "展示展览设计",
           term: "212202",
           class: "2019级宣怀1班",
+          size: 24,
         },
       ],
       value_1: [],
@@ -202,7 +211,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #d9d9d9;
+  background: #c7f1e9;
   border-radius: 21px;
 }
 .add img {
@@ -212,10 +221,8 @@ export default {
 .course {
   width: 100%;
   height: 260px;
-  background: #d9d9d9;
+  background: #c7f1e9;
   border-radius: 21px;
-  background-image: url("../assets/back.svg");
-  background-size: 100% 100%;
   padding: 14px 24px;
   padding-bottom: 25px;
   display: flex;
@@ -235,9 +242,10 @@ export default {
 }
 .course-wrapper {
   position: absolute;
-  width: 30%;
+  width: 15%;
   right: 0;
   height: 100%;
+  z-index: 2;
 }
 .course-wrapper:hover + .delete {
   right: 0;
@@ -245,16 +253,31 @@ export default {
 .delete:hover {
   right: 0;
 }
+.circle-bg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(148, 228, 213, 0.44) 0%,
+    rgba(45, 220, 184, 0.44) 15.1%
+  );
+  border-radius: 50%;
+  z-index: 1;
+}
 .num {
   font-family: "Smiley Sans";
   font-size: 16px;
   color: #ffffff;
   margin: 0;
   font-style: italic;
+  z-index: 2;
 }
 .course-info {
   display: flex;
   flex-direction: column;
+  z-index: 2;
 }
 .name-line {
   display: flex;
@@ -263,7 +286,7 @@ export default {
 }
 .name-line p {
   font-size: 20px;
-  color: #333333;
+  color: #000;
   margin: 0;
   margin-right: 8px;
 }
@@ -275,6 +298,6 @@ export default {
 .more-info {
   margin: 0;
   font-size: 14px;
-  color: #c0c0c0;
+  color: #333;
 }
 </style>

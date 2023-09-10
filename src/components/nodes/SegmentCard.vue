@@ -440,14 +440,17 @@ export default {
   overflow: hidden;
   background: linear-gradient(
     90deg,
-    rgba(217, 217, 217, 0.6) 0%,
-    #d9d9d9 17.5%,
-    #d9d9d9 81.56%,
-    rgba(217, 217, 217, 0.6) 100%
+    rgba(199, 241, 233, 0.6) 0%,
+    rgba(199, 241, 233, 0.45) 0.01%,
+    rgba(199, 241, 233, 0.55) 17.5%,
+    rgba(199, 241, 233, 0.55) 83.12%,
+    rgba(199, 241, 233, 0.45) 100%
   );
+  backdrop-filter: blur(1px);
+  border: 0.2px solid #333;
 }
 .top-div {
-  background-color: #c3c3c3;
+  background-color: #c7f1e9;
   height: 30px;
   width: 100%;
   display: flex;
@@ -530,18 +533,14 @@ export default {
   height: 100%;
   left: 0;
   top: 0;
-  background: linear-gradient(
-    92.65deg,
-    #6a6a6a 4.77%,
-    rgba(106, 106, 106, 0) 76.55%
-  );
+  background: linear-gradient(90deg, #15c3a1 4.77%, rgba(21, 195, 161, 0) 100%);
   z-index: 1;
 }
 .title {
   font-family: "Smiley Sans";
   font-style: italic;
   font-size: 16px;
-  color: #ffffff;
+  color: #000000;
   background-color: transparent;
   outline: none;
   border: none;
@@ -558,7 +557,7 @@ export default {
   font-family: "Smiley Sans";
   font-style: italic;
   font-size: 8px;
-  color: #e7e7e7;
+  color: #000000;
   outline: none;
   z-index: 3;
 }

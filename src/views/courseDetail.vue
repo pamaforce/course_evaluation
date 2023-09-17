@@ -295,7 +295,7 @@
               <div class="row-table-item-2">
                 <el-table
                   ref="multipleTable"
-                  :data="tableData.slice(0, 4)"
+                  :data="tableData.slice(0, 3)"
                   tooltip-effect="dark"
                 >
                   <el-table-column type="selection" width="40" align="center">
@@ -316,21 +316,12 @@
                     show-overflow-tooltip
                   >
                   </el-table-column>
-                  <el-table-column
-                    prop="stu_num"
-                    label="学号"
-                    width="90"
-                    align="center"
-                    sortable
-                    show-overflow-tooltip
-                  >
-                  </el-table-column>
                 </el-table>
               </div>
               <div class="row-table-item-2">
                 <el-table
                   ref="multipleTable"
-                  :data="tableData.slice(5, 7)"
+                  :data="tableData.slice(4, 7)"
                   tooltip-effect="dark"
                 >
                   <el-table-column type="selection" width="40" align="center">
@@ -340,7 +331,7 @@
                     type="index"
                     width="50"
                     align="center"
-                    :index="(i) => i + 5"
+                    :index="(i) => i + 4"
                   >
                   </el-table-column>
                   <el-table-column
@@ -348,15 +339,6 @@
                     label="姓名"
                     width="80"
                     align="center"
-                    show-overflow-tooltip
-                  >
-                  </el-table-column>
-                  <el-table-column
-                    prop="stu_num"
-                    label="学号"
-                    width="90"
-                    align="center"
-                    sortable
                     show-overflow-tooltip
                   >
                   </el-table-column>
@@ -404,7 +386,7 @@
               <div class="row-table-item-2">
                 <el-table
                   ref="multipleTable"
-                  :data="tableData.slice(0, 4)"
+                  :data="tableData.slice(0, 3)"
                   tooltip-effect="dark"
                 >
                   <el-table-column type="selection" width="40" align="center">
@@ -425,21 +407,12 @@
                     show-overflow-tooltip
                   >
                   </el-table-column>
-                  <el-table-column
-                    prop="stu_num"
-                    label="学号"
-                    width="90"
-                    align="center"
-                    sortable
-                    show-overflow-tooltip
-                  >
-                  </el-table-column>
                 </el-table>
               </div>
               <div class="row-table-item-2">
                 <el-table
                   ref="multipleTable"
-                  :data="tableData.slice(5, 7)"
+                  :data="tableData.slice(4, 7)"
                   tooltip-effect="dark"
                 >
                   <el-table-column type="selection" width="40" align="center">
@@ -449,7 +422,7 @@
                     type="index"
                     width="50"
                     align="center"
-                    :index="(i) => i + 5"
+                    :index="(i) => i + 4"
                   >
                   </el-table-column>
                   <el-table-column
@@ -457,15 +430,6 @@
                     label="姓名"
                     width="80"
                     align="center"
-                    show-overflow-tooltip
-                  >
-                  </el-table-column>
-                  <el-table-column
-                    prop="stu_num"
-                    label="学号"
-                    width="90"
-                    align="center"
-                    sortable
                     show-overflow-tooltip
                   >
                   </el-table-column>
@@ -493,6 +457,7 @@ import { Clipboard } from "@antv/x6-plugin-clipboard";
 import { History } from "@antv/x6-plugin-history";
 import { Keyboard } from "@antv/x6-plugin-keyboard";
 import { Selection } from "@antv/x6-plugin-selection";
+import { setLargeData, getLargeData } from "../utils/data";
 register({
   shape: "custom-vue-node-name-card",
   component: NameCard,
@@ -697,6 +662,7 @@ export default {
       layoutLoading0: false,
       layoutLoading1: false,
       layoutLoading2: false,
+      xTimer: null,
       graph: null,
       graph0: null,
       graph1: null,
@@ -1009,96 +975,116 @@ export default {
           console.log(edge);
         }
       });
+      let storageGraph = getLargeData("graph");
+      if (storageGraph.cells) {
+        graph.fromJSON(storageGraph);
+      } else {
+        const groups = this.groups;
+        const nameNode = graph.addNode({
+          shape: "custom-vue-node-name-card",
+          x: 0,
+          y: 0,
+          data: {
+            title: "展示展览设计",
+            score: 100,
+            disableClone: true,
+            disableRemove: true,
+          },
+          ports: {
+            groups: groups,
+            items: [{ id: "out-port-1", group: "out" }],
+          },
+        });
+        const segmentNode1 = graph.addNode({
+          shape: "custom-vue-node-segment-card",
+          x: 400,
+          y: -200,
+          data: {
+            title: "环节名称1",
+            score: 15,
+            max: 100,
+          },
+          ports: {
+            groups: groups,
+            items: [
+              { id: "in-port-1", group: "in" },
+              { id: "out-port-1", group: "out" },
+            ],
+          },
+        });
+        const segmentNode2 = graph.addNode({
+          shape: "custom-vue-node-segment-card",
+          x: 400,
+          y: 0,
+          data: {
+            title: "环节名称2",
+            score: 50,
+            max: 100,
+          },
+          ports: {
+            groups: groups,
+            items: [
+              { id: "in-port-1", group: "in" },
+              { id: "out-port-1", group: "out" },
+            ],
+          },
+        });
+        const segmentNode3 = graph.addNode({
+          shape: "custom-vue-node-segment-card",
+          x: 950,
+          y: 140,
+          data: {
+            title: "环节名称3",
+            score: 35,
+            max: 100,
+          },
+          ports: {
+            groups: groups,
+            items: [
+              { id: "in-port-1", group: "in" },
+              { id: "out-port-1", group: "out" },
+            ],
+          },
+        });
+        graph.addEdge({
+          shape: "dag-edge",
+          zIndex: -1,
+          source: { cell: nameNode, port: "out-port-1" },
+          target: { cell: segmentNode1, port: "in-port-1" },
+        });
+        graph.addEdge({
+          shape: "dag-edge",
+          zIndex: -1,
+          source: { cell: nameNode, port: "out-port-1" },
+          target: { cell: segmentNode2, port: "in-port-1" },
+        });
+        graph.addEdge({
+          shape: "dag-edge",
+          zIndex: -1,
+          source: { cell: segmentNode2, port: "out-port-1" },
+          target: { cell: segmentNode3, port: "in-port-1" },
+        });
+      }
+      graph.on("cell:change:*", () => {
+        this.debounce(this.handleGraphChange, 500);
+      });
       this.setGraph(graph);
-      const groups = this.groups;
-      const nameNode = graph.addNode({
-        shape: "custom-vue-node-name-card",
-        x: 0,
-        y: 0,
-        data: {
-          title: "展示展览设计",
-          score: 100,
-          disableClone: true,
-          disableRemove: true,
-        },
-        ports: {
-          groups: groups,
-          items: [{ id: "out-port-1", group: "out" }],
-        },
-      });
-      const segmentNode1 = graph.addNode({
-        shape: "custom-vue-node-segment-card",
-        x: 400,
-        y: -200,
-        data: {
-          title: "环节名称1",
-          score: 15,
-          max: 100,
-        },
-        ports: {
-          groups: groups,
-          items: [
-            { id: "in-port-1", group: "in" },
-            { id: "out-port-1", group: "out" },
-          ],
-        },
-      });
-      const segmentNode2 = graph.addNode({
-        shape: "custom-vue-node-segment-card",
-        x: 400,
-        y: 0,
-        data: {
-          title: "环节名称2",
-          score: 50,
-          max: 100,
-        },
-        ports: {
-          groups: groups,
-          items: [
-            { id: "in-port-1", group: "in" },
-            { id: "out-port-1", group: "out" },
-          ],
-        },
-      });
-      const segmentNode3 = graph.addNode({
-        shape: "custom-vue-node-segment-card",
-        x: 950,
-        y: 140,
-        data: {
-          title: "环节名称3",
-          score: 35,
-          max: 100,
-        },
-        ports: {
-          groups: groups,
-          items: [
-            { id: "in-port-1", group: "in" },
-            { id: "out-port-1", group: "out" },
-          ],
-        },
-      });
-      graph.addEdge({
-        shape: "dag-edge",
-        zIndex: -1,
-        source: { cell: nameNode, port: "out-port-1" },
-        target: { cell: segmentNode1, port: "in-port-1" },
-      });
-      graph.addEdge({
-        shape: "dag-edge",
-        zIndex: -1,
-        source: { cell: nameNode, port: "out-port-1" },
-        target: { cell: segmentNode2, port: "in-port-1" },
-      });
-      graph.addEdge({
-        shape: "dag-edge",
-        zIndex: -1,
-        source: { cell: segmentNode2, port: "out-port-1" },
-        target: { cell: segmentNode3, port: "in-port-1" },
-      });
       setTimeout(() => {
         this.showMenu = true;
       }, 1000);
-      console.log(graph);
+    },
+    debounce(func, delay) {
+      clearTimeout(this.xTimer);
+      this.xTimer = setTimeout(function () {
+        func();
+      }, delay);
+    },
+    handleGraphChange() {
+      console.log(this.graph.toJSON(), JSON.stringify(this.graph.toJSON()));
+      setLargeData("graph", this.graph.toJSON());
+      setTimeout(() => {
+        console.log(getLargeData("graph"));
+      }, 500);
     },
     handleSlide(val) {
       if (this.graph) this.graph.zoomTo(val);

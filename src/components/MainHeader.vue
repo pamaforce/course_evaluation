@@ -16,8 +16,8 @@
         <img src="../assets/avatar.png" alt="logo" />
         <el-dropdown trigger="click" @command="handleCommand">
           <span class="el-dropdown-link">
-            您好，{{ authType[getToken().split("_")[0]] }}用户{{
-              getToken().split("_")[1]
+            您好，{{ authType[getData("info").type] }}用户{{
+              getData("info").realname
             }}<i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
@@ -45,15 +45,17 @@
 </template>
 
 <script>
-import { getToken, removeToken } from "@/utils/auth";
+import { removeToken } from "@/utils/auth";
+import { getData } from "@/utils/data";
 export default {
   data() {
     return {
       activeItem: 0,
       showNav: false,
       authType: {
-        1: "教师",
-        2: "学生",
+        0: "超管",
+        1: "学生",
+        2: "教师",
         3: "专家",
       },
     };
@@ -71,8 +73,8 @@ export default {
     handleBack() {
       this.$bus.$emit("back");
     },
-    getToken() {
-      return getToken() || "_";
+    getData(key) {
+      return getData(key) || {};
     },
     handleCommand(val) {
       switch (val) {

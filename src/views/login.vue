@@ -32,6 +32,8 @@
 
 <script>
 import { setToken } from "../utils/auth";
+import { setData } from "../utils/data";
+import { login } from "../api/index";
 export default {
   data() {
     return {
@@ -56,22 +58,27 @@ export default {
         return;
       }
       this.loading = true;
-      if (
-        (this.account === "teacher1" ||
-          this.account === "expert1" ||
-          this.account === "student1") &&
-        this.password === "password"
-      ) {
-        setTimeout(() => {
-          this.$message.success("登录成功");
+      login({
+        username: this.account,
+        password: this.password,
+      })
+        .then((res) => {
+          console.log(res);
+          if (res.err_code === 0) {
+            this.$message.success("登录成功");
+            this.loading = false;
+            setToken(res.data[1].original.access_token);
+            setData("info", res.data[0]);
+            this.$router.push("/myCourse");
+          } else {
+            this.$message.error(res.message);
+            this.loading = false;
+          }
+        })
+        .catch(() => {
+          this.$message.error("登录失败，请检查服务器状态~");
           this.loading = false;
-          setToken(this.authMap[this.account] + "_" + this.account);
-          this.$router.push("/myCourse");
-        }, 500);
-      } else {
-        this.$message.error("账号或密码错误，请认真检查一下哦~");
-        this.loading = false;
-      }
+        });
     },
   },
 };
